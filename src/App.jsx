@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-  ArrowRight, ArrowUpRight, Bank, Briefcase, Calculator, Check, CheckCircle, Clock, Coins, Envelope, House, MapPin,
-  Phone, Plus, Quotes, Star, TrendDown, User, WarningCircle, WhatsappLogo,
+  ArrowRight, ArrowUpRight, Bank, Briefcase, Calculator, Check, CheckCircle, Clock, Coins, Envelope, FacebookLogo,
+  GoogleLogo, House, InstagramLogo, LinkedinLogo, MapPin, Phone, Plus, Quotes, ShareNetwork, Star, TrendDown, User,
+  WarningCircle, WhatsappLogo, XLogo, YoutubeLogo,
 } from '@phosphor-icons/react'
-import { CONTACT, CRITERIA, DOCS, FACTS, FAQ, LOANS, REVIEWS, STEPS, wa } from './data.js'
+import { CONTACT, CRITERIA, DOCS, FACTS, FAQ, LOANS, REVIEWS, SOCIAL, STEPS, wa } from './data.js'
 import { Band, Hero, Nav, QuoteSection } from './Hero.jsx'
 import Calculators from './Calculators.jsx'
-import { Arc, Logo, Magnetic, Reveal, SectionHead, spot, spring } from './ui.jsx'
+import { Arc, Logo, Magnetic, Num, Reveal, SectionHead, spot, spring } from './ui.jsx'
+import { emi, inr } from './lib/finance.js'
 
 const wrap = 'mx-auto max-w-7xl px-4 md:px-6'
 const HELLO = wa('Hello India Finance, I would like to discuss a loan.')
@@ -159,6 +161,47 @@ function OfferSort() {
           <span key={t} className="rounded-full border border-fg/12 px-3 py-1.5 text-xs text-fg/70">{t}</span>
         ))}
       </div>
+      <Savings best={list[0].rate} worst={list[list.length - 1].rate} />
+    </div>
+  )
+}
+
+// What picking the cheapest of the offers above saves, on a sample ₹5 L over 4 years.
+const SAMPLE_P = 500_000
+const SAMPLE_N = 48
+function Savings({ best, worst }) {
+  const paidBest = emi(SAMPLE_P, best, SAMPLE_N) * SAMPLE_N
+  const paidWorst = emi(SAMPLE_P, worst, SAMPLE_N) * SAMPLE_N
+  const intBest = paidBest - SAMPLE_P
+  const intWorst = paidWorst - SAMPLE_P
+  return (
+    <div className="mt-8 rounded-3xl border border-fg/10 bg-fg/[0.05] p-5 md:p-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-fg/45">You keep, by picking the best offer</p>
+          <p className="mt-2 font-display text-4xl font-medium tracking-tight md:text-5xl">
+            <Num value={paidWorst - paidBest} />
+          </p>
+        </div>
+        <p className="pb-1 text-xs text-fg/55">on ₹5 L over 4 years</p>
+      </div>
+      <div className="mt-5 grid gap-2.5">
+        {[
+          ['Best offer', best, intBest, 'bg-fg'],
+          ['Costliest offer', worst, intWorst, 'bg-heart'],
+        ].map(([label, rate, interest, bar]) => (
+          <div key={label}>
+            <div className="flex justify-between font-mono text-[11px] text-fg/60">
+              <span>{label} · {rate.toFixed(2)}%</span>
+              <span>interest {inr(interest, true)}</span>
+            </div>
+            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-fg/10">
+              <motion.div className={`h-full origin-left rounded-full ${bar}`} animate={{ scaleX: interest / intWorst }} transition={spring} />
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 text-[11px] text-fg/40">Illustrative. Uses the four sample rates above; your offers depend on your profile.</p>
     </div>
   )
 }
@@ -582,6 +625,14 @@ function Contact() {
             <Info icon={Phone} label="Call" value={CONTACT.phone} href={CONTACT.tel} cta="Call now" />
             <Info icon={Clock} label="Hours" value={CONTACT.hours} />
             {CONTACT.email && <Info icon={Envelope} label="Email" value={CONTACT.email} href={`mailto:${CONTACT.email}`} cta="Write to us" className="sm:col-span-2" />}
+            {SOCIAL.length > 0 && (
+              <div className="rounded-[2rem] border border-fg/[0.08] bg-deep p-6 sm:col-span-2">
+                <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-fg/40">
+                  <ShareNetwork size={14} weight="bold" className="text-brand" /> Follow us
+                </p>
+                <Socials className="mt-3" />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -598,6 +649,32 @@ function Input({ label, hint, error, className = '', children }) {
       {children}
       {error && <span className="flex items-center gap-1.5 text-xs text-heart"><WarningCircle size={14} /> {error}</span>}
     </label>
+  )
+}
+
+const SOCIAL_ICON = { instagram: InstagramLogo, facebook: FacebookLogo, youtube: YoutubeLogo, linkedin: LinkedinLogo, x: XLogo, google: GoogleLogo }
+
+function Socials({ className = '' }) {
+  return (
+    <ul className={`flex flex-wrap gap-2 ${className}`}>
+      {SOCIAL.map((s) => {
+        const Icon = SOCIAL_ICON[s.id]
+        return (
+          <li key={s.id}>
+            <a
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`India Finance on ${s.label}`}
+              title={s.label}
+              className="grid size-11 place-items-center rounded-full border border-fg/10 bg-deep text-fg/70 transition hover:-translate-y-0.5 hover:border-brand hover:bg-brand hover:text-[#fff] active:scale-95"
+            >
+              <Icon size={20} weight="fill" />
+            </a>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 
@@ -630,6 +707,7 @@ function Footer() {
           <p className="mt-6 max-w-[36ch] text-sm leading-relaxed text-fg/50">
             Loan agency in Esplanade, Kolkata. We arrange personal, business and property loans with partner banks and NBFCs.
           </p>
+          <Socials className="mt-6" />
         </div>
         <FooterCol span="md:col-span-3" title="Loans" items={LOANS.map((l) => [l.name, '#loans'])} />
         <FooterCol span="md:col-span-2" title="Tools" items={[['EMI calculator', '#calculators'], ['Eligibility', '#calculators'], ['Drawing power', '#calculators'], ['Documents', '#documents'], ['FAQ', '#faq']]} />
@@ -646,8 +724,10 @@ function Footer() {
         </p>
         <p className="mt-4">© {new Date().getFullYear()} India Finance, Kolkata. India map: svg-maps by Victor Cazanave, CC BY 4.0.</p>
       </div>
-      <p aria-hidden className="pointer-events-none -mb-[0.18em] select-none whitespace-nowrap bg-gradient-to-b from-fg to-brand bg-clip-text text-center font-display text-[17vw] font-semibold leading-none tracking-[-0.05em] text-transparent">
-        India Finance
+      {/* navy ends exactly at "n", the logo's heart red takes over from "a" — hard split at the letter, no blend */}
+      <p aria-hidden className="pointer-events-none -mb-[0.18em] select-none whitespace-nowrap text-center font-display text-[17vw] font-semibold leading-none tracking-[-0.05em] text-transparent">
+        <span className="bg-gradient-to-b from-fg to-brand bg-clip-text">India Fin</span>
+        <span className="bg-gradient-to-b from-heart to-[#8b1520] bg-clip-text">ance</span>
       </p>
     </footer>
   )

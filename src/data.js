@@ -6,7 +6,7 @@ export const CONTACT = {
   phone: '+91 91474 17091',
   tel: 'tel:+919147417091',
   whatsapp: '919147417091',
-  // ponytail: no email or social handles on the Google profile — add here and they show up in footer/contact
+  // ponytail: no email on the Google profile — add one here and it shows in the contact section
   email: null,
   address: '2nd Floor, 23 Market Street, Esplanade, Janbazar, Taltala, Kolkata, West Bengal 700016',
   addressShort: '23 Market Street, Esplanade, Kolkata',
@@ -16,6 +16,17 @@ export const CONTACT = {
   mapEmbed: 'https://www.google.com/maps?q=India+Finance,+23+Market+St,+Esplanade,+Kolkata+700016&output=embed',
   rating: '5.0',
 }
+
+// Social profiles. Paste a full URL to show an icon; leave '' to hide it.
+// Instagram: found on Google as an account posting India Finance offers — confirm it is the official one.
+export const SOCIAL = [
+  { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/royamit590/' },
+  { id: 'facebook', label: 'Facebook', url: '' },
+  { id: 'youtube', label: 'YouTube', url: '' },
+  { id: 'linkedin', label: 'LinkedIn', url: '' },
+  { id: 'x', label: 'X (Twitter)', url: '' },
+  { id: 'google', label: 'Google reviews', url: CONTACT.google },
+].filter((s) => s.url)
 
 export const wa = (text) => `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`
 
