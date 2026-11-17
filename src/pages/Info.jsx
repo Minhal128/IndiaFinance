@@ -197,7 +197,7 @@ export function Guide() {
             </a>
           </div>
         </nav>
-        <div className="max-w-[68ch]">
+        <div className="min-w-0 max-w-[68ch]">
           <H id="what">What a cash credit limit is</H>
           <P>A cash credit (CC) limit is a running line of credit for day-to-day business needs: buying stock, paying suppliers and waiting for customers to pay you. Unlike a term loan, you do not get the full amount at once. You draw what you need, repay when sales come in, and draw again.</P>
           <P>Interest is charged only on the balance you actually use each day. A ₹50 lakh limit drawn to ₹20 lakh for a month costs interest on ₹20 lakh for that month, not ₹50 lakh.</P>

@@ -119,7 +119,7 @@ export function ToolsHub() {
 
 export function ToolPage({ id }) {
   const tool = TOOLS.find((t) => t.slug === id)
-  useTitle(tool?.name ?? 'Not found')
+  useTitle(tool?.name ?? 'Page not found')
   if (!tool) return <NotFound />
   const { C, formula, terms } = META[tool.slug]
   return (

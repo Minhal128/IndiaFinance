@@ -60,7 +60,7 @@ export function LoansHub() {
 
 export function LoanPage({ id }) {
   const loan = LOANS.find((l) => l.slug === id)
-  useTitle(loan?.name ?? 'Not found')
+  useTitle(loan?.name ?? 'Page not found')
   if (!loan) return <NotFound />
   const d = LOAN_DETAILS[loan.id]
   const Icon = ICONS[loan.id]
