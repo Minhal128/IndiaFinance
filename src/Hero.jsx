@@ -1,22 +1,30 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, ArrowUpRight, CheckCircle, List, Phone, ShieldCheck, Star, WhatsappLogo, X } from '@phosphor-icons/react'
-import { CONTACT, LOANS, wa } from './data.js'
+import { ArrowRight, ArrowUpRight, CaretDown, CheckCircle, List, Phone, ShieldCheck, Star, WhatsappLogo, X } from '@phosphor-icons/react'
+import { CONTACT, LOANS, TOOLS, wa } from './data.js'
+import { usePath } from './router.jsx'
 import { emi, inr } from './lib/finance.js'
 import { Logo, Magnetic, Num, Reveal, spring } from './ui.jsx'
 import IndiaMap from './IndiaMap.jsx'
 
-const LINKS = [
-  ['Loans', '#loans'],
-  ['Process', '#process'],
-  ['Calculators', '#calculators'],
-  ['Documents', '#documents'],
-  ['FAQ', '#faq'],
+// Top-level nav. Loans and Tools open a CSS-only dropdown (hover or keyboard focus).
+const MENU = [
+  { label: 'Loans', href: '/loans', items: LOANS.map((l) => [l.name, `/loans/${l.slug}`, l.rate]) },
+  { label: 'Tools', href: '/tools', items: TOOLS.map((t) => [t.name, `/tools/${t.slug}`, t.blurb]) },
+  { label: 'Rates', href: '/rates' },
+  { label: 'Glossary', href: '/glossary' },
+  { label: 'Guide', href: '/guides/cash-credit-explained' },
+  { label: 'FAQ', href: '/faq' },
 ]
+const MORE = [['Documents', '/documents'], ['Contact', '/contact']]
 const HELLO = wa('Hello India Finance, I would like to discuss a loan.')
 
 export function Nav() {
   const [open, setOpen] = useState(false)
+  const path = usePath()
+  const isOn = (href) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`))
+  useEffect(() => setOpen(false), [path])
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:pt-4">
       <motion.nav
@@ -26,20 +34,40 @@ export function Nav() {
         className="glass mx-auto flex max-w-6xl items-center justify-between rounded-full py-2 pl-4 pr-2 md:pl-5"
       >
         <Logo />
-        <ul className="hidden items-center gap-1 lg:flex">
-          {LINKS.map(([label, href]) => (
-            <li key={href}>
-              <a href={href} className="rounded-full px-3.5 py-2 text-[13px] font-medium text-fg/65 transition-colors hover:text-fg">
-                {label}
+        <ul className="hidden items-center gap-0.5 lg:flex">
+          {MENU.map((m) => (
+            <li key={m.href} className="group relative">
+              <a
+                href={m.href}
+                aria-current={isOn(m.href) ? 'page' : undefined}
+                className={`flex items-center gap-1 rounded-full px-3 py-2 text-[13px] font-medium transition-colors ${isOn(m.href) ? 'bg-sky text-brand' : 'text-fg/65 hover:text-fg'}`}
+              >
+                {m.label}
+                {m.items && <CaretDown size={11} weight="bold" className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />}
               </a>
+              {m.items && (
+                <div className="invisible absolute left-1/2 top-full w-[22rem] -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                  <div className="glass rounded-3xl bg-deep/95 p-2">
+                    {m.items.map(([t, href, sub]) => (
+                      <a key={href} href={href} className={`block rounded-2xl px-4 py-3 transition-colors hover:bg-sky ${path === href ? 'bg-sky' : ''}`}>
+                        <span className="block text-sm font-semibold">{t}</span>
+                        <span className="block truncate text-xs text-fg/50">{sub}</span>
+                      </a>
+                    ))}
+                    <a href={m.href} className="mt-1 flex items-center justify-between rounded-2xl border-t border-fg/[0.06] px-4 py-3 text-xs font-semibold text-brand">
+                      See all {m.label.toLowerCase()} <ArrowRight size={13} />
+                    </a>
+                  </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>
         <div className="flex items-center gap-1.5">
-          <a href={CONTACT.tel} className="hidden items-center gap-2 rounded-full px-3 py-2 font-mono text-[13px] text-fg/80 transition-colors hover:text-fg md:flex">
+          <a href={CONTACT.tel} className="hidden items-center gap-2 rounded-full px-3 py-2 font-mono text-[13px] text-fg/80 transition-colors hover:text-fg xl:flex">
             <Phone size={15} weight="bold" className="text-brand" /> {CONTACT.phone}
           </a>
-          <Magnetic href="#contact" className="hidden items-center gap-1.5 rounded-full bg-fg px-4 py-2.5 text-[13px] font-semibold text-bg sm:flex">
+          <Magnetic href="/contact" className="hidden items-center gap-1.5 rounded-full bg-fg px-4 py-2.5 text-[13px] font-semibold text-bg sm:flex">
             Apply now <ArrowUpRight size={14} weight="bold" />
           </Magnetic>
           <button
@@ -59,22 +87,30 @@ export function Nav() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={spring}
-            className="glass mx-auto mt-2 max-w-6xl rounded-3xl bg-bg/90 p-3 lg:hidden"
+            className="glass mx-auto mt-2 max-h-[calc(100dvh-6rem)] max-w-6xl overflow-y-auto rounded-3xl bg-bg/95 p-4 lg:hidden"
           >
-            <motion.ul initial="h" animate="s" variants={{ s: { transition: { staggerChildren: 0.04 } } }}>
-              {[...LINKS, ['Contact', '#contact']].map(([label, href]) => (
-                <motion.li key={href} variants={{ h: { opacity: 0, x: -10 }, s: { opacity: 1, x: 0 } }}>
-                  <a href={href} onClick={() => setOpen(false)} className="flex items-center justify-between rounded-2xl px-4 py-3 font-display text-xl text-fg hover:bg-fg/5">
-                    {label} <ArrowRight size={18} className="text-fg/40" />
-                  </a>
-                </motion.li>
+            {MENU.filter((m) => m.items).map((m) => (
+              <div key={m.href} className="mb-3">
+                <a href={m.href} className="px-2 font-mono text-[10px] uppercase tracking-[0.18em] text-fg/45">{m.label}</a>
+                <div className="mt-1 grid grid-cols-2 gap-1">
+                  {m.items.map(([t, href]) => (
+                    <a key={href} href={href} className={`rounded-2xl px-3 py-2.5 text-sm font-medium ${path === href ? 'bg-sky text-brand' : 'hover:bg-fg/5'}`}>{t}</a>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div className="grid grid-cols-2 gap-1 border-t border-fg/[0.08] pt-3">
+              {[...MENU.filter((m) => !m.items).map((m) => [m.label, m.href]), ...MORE].map(([t, href]) => (
+                <a key={href} href={href} className={`flex items-center justify-between rounded-2xl px-3 py-2.5 font-display text-lg ${isOn(href) ? 'bg-sky text-brand' : 'hover:bg-fg/5'}`}>
+                  {t} <ArrowRight size={15} className="text-fg/35" />
+                </a>
               ))}
-            </motion.ul>
-            <div className="mt-2 grid grid-cols-2 gap-2">
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
               <a href={CONTACT.tel} className="flex items-center justify-center gap-2 rounded-2xl bg-fg/10 py-3 text-sm font-semibold">
                 <Phone size={18} weight="bold" /> Call
               </a>
-              <a href={HELLO} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 on-dark rounded-2xl bg-brand py-3 text-sm font-semibold">
+              <a href={HELLO} target="_blank" rel="noopener" className="on-dark flex items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-sm font-semibold">
                 <WhatsappLogo size={18} weight="fill" /> WhatsApp
               </a>
             </div>

@@ -5,7 +5,7 @@ import {
   GoogleLogo, House, InstagramLogo, LinkedinLogo, MapPin, Phone, Plus, Quotes, ShareNetwork, Star, TrendDown, User,
   WarningCircle, WhatsappLogo, XLogo, YoutubeLogo,
 } from '@phosphor-icons/react'
-import { CONTACT, CRITERIA, DOCS, FACTS, FAQ, LOANS, REVIEWS, SOCIAL, STEPS, wa } from './data.js'
+import { CONTACT, CRITERIA, DOCS, FACTS, FAQ, LOANS, REVIEWS, SOCIAL, STEPS, TOOLS, wa } from './data.js'
 import { Band, Hero, QuoteSection } from './Hero.jsx'
 import { useTitle } from './router.jsx'
 import Calculators from './Calculators.jsx'
@@ -107,12 +107,15 @@ export function Loans() {
                     </div>
                   ))}
                 </dl>
-                <a href={wa(`Hello India Finance, I'm interested in a ${l.name}.`)} target="_blank" rel="noopener" className="mt-7 inline-flex items-center gap-2 self-start rounded-full bg-fg/[0.08] py-2 pl-4 pr-2 text-sm font-medium transition hover:bg-fg hover:text-bg">
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                <a href={`/loans/${l.slug}`} className="rounded-full border border-fg/15 px-4 py-2 text-sm font-medium transition hover:border-fg/40">Details</a>
+                <a href={wa(`Hello India Finance, I'm interested in a ${l.name}.`)} target="_blank" rel="noopener" className="inline-flex items-center gap-2 rounded-full bg-fg/[0.08] py-2 pl-4 pr-2 text-sm font-medium transition hover:bg-fg hover:text-bg">
                   Ask about this loan
                   <span className="grid size-7 place-items-center rounded-full bg-fg text-bg transition-transform group-hover:rotate-45">
                     <ArrowUpRight size={14} weight="bold" />
                   </span>
                 </a>
+                </div>
               </div>
             </Reveal>
           )
@@ -706,8 +709,8 @@ export function Footer() {
           </p>
           <Socials className="mt-6" />
         </div>
-        <FooterCol span="md:col-span-3" title="Loans" items={LOANS.map((l) => [l.name, '#loans'])} />
-        <FooterCol span="md:col-span-2" title="Tools" items={[['EMI calculator', '#calculators'], ['Eligibility', '#calculators'], ['Drawing power', '#calculators'], ['Documents', '#documents'], ['FAQ', '#faq']]} />
+        <FooterCol span="md:col-span-3" title="Loans" items={LOANS.map((l) => [l.name, `/loans/${l.slug}`])} />
+        <FooterCol span="md:col-span-2" title="Tools" items={[...TOOLS.map((t) => [t.name, `/tools/${t.slug}`]), ['Indicative rates', '/rates'], ['Glossary', '/glossary'], ['Cash credit guide', '/guides/cash-credit-explained'], ['Documents', '/documents'], ['FAQ', '/faq'], ['Contact', '/contact']]} />
         <div className="md:col-span-3">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-fg/40">Visit</p>
           <p className="mt-4 text-sm leading-relaxed text-fg/70">{CONTACT.address}</p>
@@ -748,7 +751,7 @@ export function Dock() {
     <>
       <nav className="glass fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1 rounded-full bg-bg/70 p-1.5 md:hidden" aria-label="Quick actions">
         <a href={CONTACT.tel} className="flex items-center justify-center gap-1.5 rounded-full py-3 text-xs font-semibold active:scale-95"><Phone size={18} weight="bold" />Call</a>
-        <a href="#calculators" className="flex items-center justify-center gap-1.5 rounded-full py-3 text-xs font-semibold active:scale-95"><Calculator size={18} weight="bold" />EMI</a>
+        <a href="/tools/emi-calculator" className="flex items-center justify-center gap-1.5 rounded-full py-3 text-xs font-semibold active:scale-95"><Calculator size={18} weight="bold" />EMI</a>
         <a href={HELLO} target="_blank" rel="noopener" className="flex items-center justify-center gap-1.5 rounded-full bg-fg py-3 text-xs font-semibold text-bg active:scale-95"><WhatsappLogo size={18} weight="fill" className="text-leaf" />Chat</a>
       </nav>
       <motion.a
