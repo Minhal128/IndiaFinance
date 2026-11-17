@@ -92,9 +92,47 @@ export function SectionHead({ index, label, title, accent, lede, className = '',
   )
 }
 
+/** Top of every inner page: breadcrumb, headline, lede, and a page-specific visual on the right. */
+export function PageHero({ crumbs = [], eyebrow, title, accent, lede, children, aside }) {
+  return (
+    <section className="relative overflow-hidden pt-32 md:pt-40">
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(10_26_74/0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgb(10_26_74/0.045)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_70%_70%_at_70%_30%,black,transparent)]" />
+        <div className="absolute -right-40 -top-48 size-[640px] rounded-full bg-brand/12 blur-[140px]" />
+        <div className="absolute -left-40 top-40 size-[380px] rounded-full bg-saffron/10 blur-[120px]" />
+      </div>
+      <div className={`relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 md:px-6 md:pb-24 ${aside ? 'lg:grid-cols-[1.05fr_0.95fr]' : ''}`}>
+        <motion.div initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={spring}>
+          {crumbs.length > 0 && (
+            <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-fg/45">
+              {crumbs.map(([label, href], i) => (
+                <span key={label} className="flex items-center gap-2">
+                  {i > 0 && <span className="text-fg/25">/</span>}
+                  {href ? <a href={href} className="hover:text-brand">{label}</a> : <span className="text-fg/70">{label}</span>}
+                </span>
+              ))}
+            </nav>
+          )}
+          {eyebrow && <div className="mt-6">{eyebrow}</div>}
+          <h1 className="mt-5 max-w-3xl font-display text-[2.6rem] font-medium leading-[1] tracking-[-0.04em] sm:text-6xl lg:text-[4.4rem]">
+            {title} {accent && <span className="font-serif italic tracking-[-0.02em] text-brand">{accent}</span>}
+          </h1>
+          {lede && <p className="mt-6 max-w-[56ch] text-base leading-relaxed text-fg/65 md:text-lg">{lede}</p>}
+          {children}
+        </motion.div>
+        {aside && (
+          <motion.div initial={{ opacity: 0, y: 30, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ ...spring, delay: 0.15 }}>
+            {aside}
+          </motion.div>
+        )}
+      </div>
+    </section>
+  )
+}
+
 export function Logo({ className = '' }) {
   return (
-    <a href="#top" className={`flex items-center gap-2.5 ${className}`} aria-label="India Finance home">
+    <a href="/" className={`flex items-center gap-2.5 ${className}`} aria-label="India Finance home">
       <img src="/logo-mark.png" alt="" className="h-8 w-auto" width="580" height="545" />
       <img src="/logo-word.png" alt="India Finance" className="h-4 w-auto md:h-[18px]" width="1080" height="140" />
     </a>

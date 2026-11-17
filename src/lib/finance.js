@@ -39,6 +39,16 @@ export function drawingPower({ stock, creditors, debtors, stockMargin = 0.25, de
   return { stockDp, debtorDp, dp, available: limit > 0 ? Math.min(dp, limit) : dp }
 }
 
+/**
+ * Debt service coverage ratio, yearly figures:
+ * (net profit + depreciation + interest) / (interest + principal repaid + new loan EMIs).
+ * ponytail: ignores the new loan's interest reducing profit — lenders refine this with full projections.
+ */
+export function dscr({ profit, depreciation = 0, interest = 0, principal = 0, newEmi = 0 }) {
+  const service = interest + principal + newEmi * 12
+  return service > 0 ? (profit + depreciation + interest) / service : Infinity
+}
+
 /** ₹ in Indian grouping, with L / Cr shorthand when compact. */
 export function inr(n, compact = false) {
   const v = Math.round(n)

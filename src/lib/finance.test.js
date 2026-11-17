@@ -1,6 +1,12 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { emi, principalFor, eligibility, drawingPower, inr } from './finance.js'
+import { emi, principalFor, eligibility, drawingPower, dscr, inr } from './finance.js'
+
+test('dscr divides cash available by debt service, new EMIs annualised', () => {
+  assert.equal(dscr({ profit: 20, depreciation: 5, interest: 10, principal: 10 }), 1.75)
+  assert.equal(dscr({ profit: 20, depreciation: 5, interest: 10, principal: 10, newEmi: 1 }), 35 / 32)
+  assert.equal(dscr({ profit: 5 }), Infinity)
+})
 
 test('emi matches the standard bank figure', () => {
   // ₹10 L at 10.5% for 5 years is ₹21,494 on every bank calculator

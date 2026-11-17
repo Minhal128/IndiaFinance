@@ -1,7 +1,7 @@
 import { useId, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Calculator, Info, Scales, Stack, WarningCircle, WhatsappLogo } from '@phosphor-icons/react'
-import { drawingPower, eligibility, emi, inr } from './lib/finance.js'
+import { Calculator, Gauge, Info, Scales, Stack, WarningCircle, WhatsappLogo } from '@phosphor-icons/react'
+import { drawingPower, dscr, eligibility, emi, inr } from './lib/finance.js'
 import { wa } from './data.js'
 import { Num, spring } from './ui.jsx'
 
@@ -57,10 +57,10 @@ function Stat({ label, value, format, big }) {
   )
 }
 
-function EmiCalc() {
-  const [p, setP] = useState(1_000_000)
-  const [r, setR] = useState(10.5)
-  const [y, setY] = useState(5)
+export function EmiCalc({ amount = 1_000_000, rate = 10.5, years = 5 }) {
+  const [p, setP] = useState(amount)
+  const [r, setR] = useState(rate)
+  const [y, setY] = useState(years)
   const P = clamp(p, 10_000, 100_000_000)
   const R = clamp(r, 1, 30)
   const Y = clamp(y, 1, 30)
@@ -98,7 +98,7 @@ function EmiCalc() {
   )
 }
 
-function EligibilityCalc() {
+export function EligibilityCalc() {
   const [income, setIncome] = useState(75_000)
   const [existing, setExisting] = useState(8_000)
   const [r, setR] = useState(11.5)
@@ -162,7 +162,7 @@ function EligibilityCalc() {
   )
 }
 
-function DrawingPowerCalc() {
+export function DrawingPowerCalc() {
   // ponytail: inputs in ₹ lakh to keep crore-sized numbers readable
   const [stock, setStock] = useState(400)
   const [cred, setCred] = useState(120)
@@ -220,6 +220,57 @@ function DrawingPowerCalc() {
   )
 }
 
+export function DscrCalc() {
+  // yearly figures in ₹ lakh
+  const [profit, setProfit] = useState(24)
+  const [dep, setDep] = useState(6)
+  const [int, setInt] = useState(8)
+  const [prin, setPrin] = useState(10)
+  const [loan, setLoan] = useState(25)
+  const [r, setR] = useState(14)
+  const [y, setY] = useState(3)
+  const L = 1e5
+  const newEmi = emi(clamp(loan, 0, 10_000) * L, clamp(r, 1, 30), clamp(y, 1, 20) * 12)
+  const base = { profit: clamp(profit, 0, 100_000) * L, depreciation: clamp(dep, 0, 100_000) * L, interest: clamp(int, 0, 100_000) * L, principal: clamp(prin, 0, 100_000) * L }
+  const before = dscr(base)
+  const after = dscr({ ...base, newEmi })
+  const fmt = (v) => (Number.isFinite(v) ? v.toFixed(2) : '∞')
+  const verdict = after >= 1.5 ? ['Comfortable', 'text-leaf'] : after >= 1.25 ? ['Meets the usual bar', 'text-saffron'] : ['Below most lenders’ comfort', 'text-[#ffd0d2]']
+  return (
+    <Panel
+      inputs={
+        <>
+          <Field label="Net profit after tax (yearly)" unit="₹ L" value={profit} onChange={setProfit} min={0} max={100_000} step={1} />
+          <div className="grid grid-cols-2 gap-5">
+            <Field label="Depreciation" unit="₹ L" value={dep} onChange={setDep} min={0} max={100_000} step={1} />
+            <Field label="Interest paid" unit="₹ L" value={int} onChange={setInt} min={0} max={100_000} step={1} hint="On all current loans" />
+          </div>
+          <Field label="Principal repaid this year" unit="₹ L" value={prin} onChange={setPrin} min={0} max={100_000} step={1} hint="On all current term loans" />
+          <Field label="New loan you want" unit="₹ L" value={loan} onChange={setLoan} min={0} max={10_000} step={1} />
+          <div className="grid grid-cols-2 gap-5">
+            <Field label="Rate" unit="%" value={r} onChange={setR} min={1} max={30} step={0.05} />
+            <Field label="Tenure" unit="yrs" value={y} onChange={setY} min={1} max={20} />
+          </div>
+        </>
+      }
+      result={
+        <>
+          <Stat label="DSCR with the new loan" value={Number.isFinite(after) ? after : 0} format={fmt} big />
+          <p className={`mt-2 text-sm font-semibold ${verdict[1]}`}>{verdict[0]}</p>
+          <div className="mt-8 grid gap-6 border-t border-fg/15 pt-6 sm:grid-cols-2">
+            <Stat label="DSCR today" value={Number.isFinite(before) ? before : 0} format={fmt} />
+            <Stat label="New EMI (monthly)" value={newEmi} />
+          </div>
+          <p className="mt-8 flex gap-2 text-xs leading-relaxed text-fg/60">
+            <Info size={16} className="mt-px shrink-0" /> Most lenders look for 1.25 or higher. This is a quick check; banks work it out year by year from your projections.
+          </p>
+        </>
+      }
+      cta={`Hello India Finance, my DSCR works out to about ${fmt(after)} with a new loan of ₹${loan} lakh. Can you help me structure it?`}
+    />
+  )
+}
+
 function Bar({ label, value, max, className }) {
   return (
     <div>
@@ -263,6 +314,7 @@ const TABS = [
   { id: 'emi', label: 'EMI', icon: Calculator, C: EmiCalc },
   { id: 'elig', label: 'Eligibility', icon: Scales, C: EligibilityCalc },
   { id: 'dp', label: 'Drawing power', icon: Stack, C: DrawingPowerCalc },
+  { id: 'dscr', label: 'DSCR', icon: Gauge, C: DscrCalc },
 ]
 
 export default function Calculators() {
