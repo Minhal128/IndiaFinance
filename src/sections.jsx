@@ -6,49 +6,46 @@ import {
   WarningCircle, WhatsappLogo, XLogo, YoutubeLogo,
 } from '@phosphor-icons/react'
 import { CONTACT, CRITERIA, DOCS, FACTS, FAQ, LOANS, REVIEWS, SOCIAL, STEPS, wa } from './data.js'
-import { Band, Hero, Nav, QuoteSection } from './Hero.jsx'
+import { Band, Hero, QuoteSection } from './Hero.jsx'
+import { useTitle } from './router.jsx'
 import Calculators from './Calculators.jsx'
 import { Arc, Logo, Magnetic, Num, Reveal, SectionHead, spot, spring } from './ui.jsx'
 import { emi, inr } from './lib/finance.js'
 
-const wrap = 'mx-auto max-w-7xl px-4 md:px-6'
-const HELLO = wa('Hello India Finance, I would like to discuss a loan.')
+export const wrap = 'mx-auto max-w-7xl px-4 md:px-6'
+export const HELLO = wa('Hello India Finance, I would like to discuss a loan.')
 
-export default function App() {
+export function Home() {
+  useTitle(null)
   return (
-    <div className="grain">
-      <Nav />
-      <main>
-        <Hero />
-        <Band />
-        <QuoteSection />
-        <Facts />
-        <Loans />
-        <Process />
-        <section id="calculators" className={`${wrap} py-28 md:py-36`}>
-          <SectionHead
-            index="03"
-            label="Calculators"
-            title="Run the numbers"
-            accent="yourself."
-            lede="Everything below is calculated in your browser. Nothing is saved, sent or checked against your credit report."
-          />
-          <Reveal><Calculators /></Reveal>
-        </section>
-        <Readiness />
-        <Reviews />
-        <Faq />
-        <Cta />
-        <Contact />
-      </main>
-      <Footer />
-      <Dock />
-    </div>
+    <>
+      <Hero />
+      <Band />
+      <QuoteSection />
+      <Facts />
+      <Loans />
+      <Process />
+      <section id="calculators" className={`${wrap} py-28 md:py-36`}>
+        <SectionHead
+          index="03"
+          label="Calculators"
+          title="Run the numbers"
+          accent="yourself."
+          lede="Everything below is calculated in your browser. Nothing is saved, sent or checked against your credit report."
+        />
+        <Reveal><Calculators /></Reveal>
+      </section>
+      <Readiness />
+      <Reviews />
+      <Faq />
+      <Cta />
+      <Contact />
+    </>
   )
 }
 
 /* ---------- Facts ---------- */
-function Facts() {
+export function Facts() {
   return (
     <section className={wrap}>
       <Reveal className="grid grid-cols-2 border-y border-fg/[0.08] lg:grid-cols-4">
@@ -65,17 +62,17 @@ function Facts() {
 }
 
 /* ---------- Loans bento ---------- */
-const ICONS = { personal: User, business: Briefcase, lap: House, cc: Coins, bt: TrendDown }
-const LAYOUT = {
+export const ICONS = { personal: User, business: Briefcase, lap: House, cc: Coins, bt: TrendDown }
+export const LAYOUT = {
   personal: 'on-dark md:col-span-7 md:row-span-2 bg-gradient-to-br from-navy to-[#173a9e] border-transparent',
   business: 'md:col-span-5 bg-deep border-fg/[0.08]',
   lap: 'md:col-span-5 bg-deep border-fg/[0.08]',
   cc: 'md:col-span-7 bg-deep border-fg/[0.08]',
   bt: 'on-dark md:col-span-5 bg-gradient-to-br from-brand-deep to-brand border-transparent',
 }
-const VISUAL = { personal: OfferSort, business: GstBars, lap: LtvGauge, cc: UtilWave, bt: RateDrop }
+export const VISUAL = { personal: OfferSort, business: GstBars, lap: LtvGauge, cc: UtilWave, bt: RateDrop }
 
-function Loans() {
+export function Loans() {
   return (
     <section id="loans" className={`${wrap} py-28 md:py-36`}>
       <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
@@ -134,7 +131,7 @@ const OFFERS = [
 ]
 const roll = () => OFFERS.map((o) => ({ ...o, rate: +(10.5 + Math.random() * 5).toFixed(2) })).sort((a, b) => a.rate - b.rate)
 
-function OfferSort() {
+export function OfferSort() {
   const [list, setList] = useState(roll)
   useEffect(() => {
     const t = setInterval(() => setList(roll()), 2800)
@@ -169,7 +166,7 @@ function OfferSort() {
 // What picking the cheapest of the offers above saves, on a sample ₹5 L over 4 years.
 const SAMPLE_P = 500_000
 const SAMPLE_N = 48
-function Savings({ best, worst }) {
+export function Savings({ best, worst }) {
   const paidBest = emi(SAMPLE_P, best, SAMPLE_N) * SAMPLE_N
   const paidWorst = emi(SAMPLE_P, worst, SAMPLE_N) * SAMPLE_N
   const intBest = paidBest - SAMPLE_P
@@ -206,7 +203,7 @@ function Savings({ best, worst }) {
   )
 }
 
-function GstBars() {
+export function GstBars() {
   const h = [38, 52, 44, 61, 57, 70, 64, 78, 72, 88, 81, 96]
   return (
     <div className="mt-9 flex h-24 items-end gap-1.5" aria-hidden>
@@ -223,7 +220,7 @@ function GstBars() {
   )
 }
 
-function LtvGauge() {
+export function LtvGauge() {
   return (
     <div className="mt-9 flex items-center gap-5">
       <motion.svg viewBox="0 0 120 66" className="w-36" aria-hidden initial="h" whileInView="s" viewport={{ once: true }}>
@@ -245,7 +242,7 @@ function LtvGauge() {
   )
 }
 
-function UtilWave() {
+export function UtilWave() {
   const d = 'M0 40 Q25 10 50 30 T100 28 T150 18 T200 34 T250 14 T300 30 T350 22 T400 40'
   return (
     <div className="relative mt-9 h-28 overflow-hidden rounded-2xl bg-sky" aria-hidden>
@@ -266,7 +263,7 @@ function UtilWave() {
   )
 }
 
-function RateDrop() {
+export function RateDrop() {
   return (
     <div className="mt-9 flex items-end gap-4">
       <p className="font-mono text-2xl text-fg/50 line-through decoration-fg/40">14.50%</p>
@@ -279,7 +276,7 @@ function RateDrop() {
 }
 
 /* ---------- Process: native sticky card stack ---------- */
-function Process() {
+export function Process() {
   return (
     <section id="process" className={`${wrap} grid gap-16 py-28 md:py-36 lg:grid-cols-[0.85fr_1.15fr]`}>
       <div className="lg:sticky lg:top-32 lg:self-start">
@@ -315,14 +312,14 @@ function Process() {
 }
 
 /* ---------- Readiness: criteria table + document checklist ---------- */
-const DOC_TABS = [
+export const DOC_TABS = [
   ['personal', 'Personal'],
   ['business', 'Business'],
   ['lap', 'Property'],
   ['cc', 'Cash credit'],
 ]
 
-function Readiness() {
+export function Readiness() {
   return (
     <section id="documents" className={`${wrap} pb-28 md:pb-36`}>
       <SectionHead
@@ -355,7 +352,7 @@ function Readiness() {
   )
 }
 
-function Checklist() {
+export function Checklist() {
   const [type, setType] = useState('personal')
   const [have, setHave] = useState({})
   const docs = DOCS[type]
@@ -424,7 +421,7 @@ function Checklist() {
 }
 
 /* ---------- Reviews ---------- */
-function Reviews() {
+export function Reviews() {
   return (
     <section className={`${wrap} grid gap-12 pb-28 md:grid-cols-12 md:pb-36`}>
       <Reveal className="relative md:col-span-5">
@@ -455,7 +452,7 @@ function Reviews() {
 }
 
 /* ---------- FAQ ---------- */
-function Faq() {
+export function Faq() {
   return (
     <section id="faq" className={`${wrap} grid gap-12 pb-28 md:pb-36 lg:grid-cols-[0.8fr_1.2fr]`}>
       <div className="lg:sticky lg:top-32 lg:self-start">
@@ -488,7 +485,7 @@ function Faq() {
 }
 
 /* ---------- CTA band ---------- */
-function Cta() {
+export function Cta() {
   return (
     <section className="px-3 pb-6">
       <Reveal className="on-dark relative mx-auto max-w-[1400px] overflow-hidden rounded-[2.5rem] bg-brand-deep px-6 py-24 text-center md:py-32">
@@ -522,7 +519,7 @@ function Cta() {
 /* ---------- Contact ---------- */
 const PHONE_RE = /^[6-9]\d{9}$/
 
-function Contact() {
+export function Contact() {
   const [v, setV] = useState({ name: '', phone: '', loan: '', amount: '', city: '', note: '', consent: false })
   const [err, setErr] = useState({})
   const [sentUrl, setSentUrl] = useState(null)
@@ -640,7 +637,7 @@ function Contact() {
   )
 }
 
-function Input({ label, hint, error, className = '', children }) {
+export function Input({ label, hint, error, className = '', children }) {
   return (
     <label className={`grid gap-2 ${className}`}>
       <span className="flex justify-between text-sm font-medium">
@@ -654,7 +651,7 @@ function Input({ label, hint, error, className = '', children }) {
 
 const SOCIAL_ICON = { instagram: InstagramLogo, facebook: FacebookLogo, youtube: YoutubeLogo, linkedin: LinkedinLogo, x: XLogo, google: GoogleLogo }
 
-function Socials({ className = '' }) {
+export function Socials({ className = '' }) {
   return (
     <ul className={`flex flex-wrap gap-2 ${className}`}>
       {SOCIAL.map((s) => {
@@ -678,7 +675,7 @@ function Socials({ className = '' }) {
   )
 }
 
-function Info({ icon: Icon, label, value, href, cta, className = '' }) {
+export function Info({ icon: Icon, label, value, href, cta, className = '' }) {
   return (
     <div className={`rounded-[2rem] border border-fg/[0.08] bg-deep p-6 ${className}`}>
       <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-fg/40">
@@ -695,7 +692,7 @@ function Info({ icon: Icon, label, value, href, cta, className = '' }) {
 }
 
 /* ---------- Footer & dock ---------- */
-function Footer() {
+export function Footer() {
   return (
     <footer className="relative overflow-hidden pb-28 md:pb-0">
       <div className={`${wrap} grid gap-12 pt-24 md:grid-cols-12`}>
@@ -733,7 +730,7 @@ function Footer() {
   )
 }
 
-function FooterCol({ title, items, span }) {
+export function FooterCol({ title, items, span }) {
   return (
     <div className={span}>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-fg/40">{title}</p>
@@ -746,7 +743,7 @@ function FooterCol({ title, items, span }) {
   )
 }
 
-function Dock() {
+export function Dock() {
   return (
     <>
       <nav className="glass fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1 rounded-full bg-bg/70 p-1.5 md:hidden" aria-label="Quick actions">

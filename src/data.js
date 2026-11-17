@@ -33,6 +33,7 @@ export const wa = (text) => `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIC
 export const LOANS = [
   {
     id: 'personal',
+    slug: 'personal-loan',
     name: 'Personal Loan',
     tag: 'Salaried & self-employed',
     blurb: 'Unsecured funds for a wedding, treatment, education or a home upgrade. We shortlist the lender most likely to approve you at the lowest rate your CIBIL allows.',
@@ -43,6 +44,7 @@ export const LOANS = [
   },
   {
     id: 'business',
+    slug: 'business-loan',
     name: 'Business & MSME Loan',
     tag: 'Traders, shops, manufacturers',
     blurb: 'Collateral-free term loans for stock, machinery or expansion, built on your GST returns, ITR and bank statements.',
@@ -53,6 +55,7 @@ export const LOANS = [
   },
   {
     id: 'lap',
+    slug: 'loan-against-property',
     name: 'Loan Against Property',
     tag: 'Residential & commercial',
     blurb: 'Unlock the value of a flat, house or shop you own, at secured-loan rates and long tenures that keep the EMI light.',
@@ -63,6 +66,7 @@ export const LOANS = [
   },
   {
     id: 'cc',
+    slug: 'cash-credit',
     name: 'Cash Credit & Overdraft',
     tag: 'Working capital limits',
     blurb: 'A revolving limit against stock and debtors. Interest only on what you draw. Fresh limits, enhancements and takeovers from your current bank.',
@@ -73,6 +77,7 @@ export const LOANS = [
   },
   {
     id: 'bt',
+    slug: 'balance-transfer',
     name: 'Balance Transfer & Top-up',
     tag: 'Already paying an EMI?',
     blurb: 'Move a costly loan to a lender charging less, and take a top-up on the same file if you need more.',
@@ -114,6 +119,7 @@ export const DOCS = {
   business: ['PAN of business and promoters', 'Aadhaar of promoters', 'Udyam / trade licence / GST certificate', 'Last 2 years’ ITR with computation', 'Last 12 months’ GST returns', '12-month current account statement'],
   lap: ['KYC of all property owners', 'Title deed and chain documents', 'Latest municipal tax receipt', 'Approved building plan', 'Income proof (ITR or salary slips)', '6-month bank statement'],
   cc: ['Audited financials (3 years)', 'Provisional current-year accounts', 'CMA data and projections', 'Stock and debtor statements', 'Existing sanction letters, if any', 'Collateral property papers'],
+  bt: ['PAN and Aadhaar', 'Existing loan sanction letter', 'Repayment schedule / loan account statement', 'Foreclosure letter from current lender', 'Income proof (salary slips or ITR)', '12-month bank statement showing EMIs'],
 }
 
 export const REVIEWS = [
@@ -123,11 +129,11 @@ export const REVIEWS = [
 ]
 
 export const FAQ = [
-  { q: 'Is India Finance a bank?', a: 'No. India Finance is a loan agency in Kolkata. We prepare your application and place it with partner banks and NBFCs. The lender makes the credit decision and disburses the money directly to you.' },
-  { q: 'Do I have to visit your office?', a: 'No. Most customers apply entirely over phone and WhatsApp. If you prefer to sit across the table, our office is on the 2nd floor of 23 Market Street, Esplanade.' },
-  { q: 'Will checking my eligibility here affect my CIBIL score?', a: 'The calculators on this page run in your browser and do not touch your credit report. A lender pulls your CIBIL only when you formally apply, and we tell you before that happens.' },
-  { q: 'What CIBIL score do I need?', a: 'Most lenders look for 700 or above for unsecured loans, and give their best rates above 750. Secured loans such as loan against property can work with lower scores if the property and income are strong.' },
-  { q: 'How fast can I get the money?', a: 'Personal loans for salaried applicants with complete documents often disburse in 2 to 7 working days. Business loans take about a week or two, and property-backed loans 2 to 4 weeks because of legal and valuation checks.' },
-  { q: 'My bank is not increasing my cash credit limit. Can you help?', a: 'Yes. We look at your stock, debtors and financials, work out the drawing power you can justify, and either take the case for enhancement or move the limit to a lender with more appetite.' },
-  { q: 'Can I move my existing loan to a lower rate?', a: 'Usually, yes, if you have paid at least 6 to 12 EMIs on time. We compare the saving against the processing fee and any foreclosure charge so you know the net benefit before you move.' },
+  { cat: 'About us', q: 'Is India Finance a bank?', a: 'No. India Finance is a loan agency in Kolkata. We prepare your application and place it with partner banks and NBFCs. The lender makes the credit decision and disburses the money directly to you.' },
+  { cat: 'Process', q: 'Do I have to visit your office?', a: 'No. Most customers apply entirely over phone and WhatsApp. If you prefer to sit across the table, our office is on the 2nd floor of 23 Market Street, Esplanade.' },
+  { cat: 'CIBIL & eligibility', q: 'Will checking my eligibility here affect my CIBIL score?', a: 'The calculators on this page run in your browser and do not touch your credit report. A lender pulls your CIBIL only when you formally apply, and we tell you before that happens.' },
+  { cat: 'CIBIL & eligibility', q: 'What CIBIL score do I need?', a: 'Most lenders look for 700 or above for unsecured loans, and give their best rates above 750. Secured loans such as loan against property can work with lower scores if the property and income are strong.' },
+  { cat: 'Process', q: 'How fast can I get the money?', a: 'Personal loans for salaried applicants with complete documents often disburse in 2 to 7 working days. Business loans take about a week or two, and property-backed loans 2 to 4 weeks because of legal and valuation checks.' },
+  { cat: 'Cash credit', q: 'My bank is not increasing my cash credit limit. Can you help?', a: 'Yes. We look at your stock, debtors and financials, work out the drawing power you can justify, and either take the case for enhancement or move the limit to a lender with more appetite.' },
+  { cat: 'Rates & charges', q: 'Can I move my existing loan to a lower rate?', a: 'Usually, yes, if you have paid at least 6 to 12 EMIs on time. We compare the saving against the processing fee and any foreclosure charge so you know the net benefit before you move.' },
 ]
